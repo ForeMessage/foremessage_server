@@ -86,7 +86,7 @@ module Api
       def verify_phone_number
         phone_number = params[:phone_number]
 
-        sns = Aws::SNS::Client.new(region: 'ap-northeast-2', access_key_id: Rails.application.credentials.production[:aws][:access_key_id], secret_access_key: Rails.application.credentials.production[:aws][:secret_access_key])
+        sns = Aws::SNS::Client.new(region: 'ap-northeast-2', access_key_id: Rails.application.credentials[:access_key_id], secret_access_key: Rails.application.credentials[:secret_access_key])
 
         certification_number = rand(1000..9999)
 
