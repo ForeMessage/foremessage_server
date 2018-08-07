@@ -85,13 +85,13 @@ module Api
 
       def verify_phone_number
         phone_number = params[:phone_number]
-
+	
         sns = Aws::SNS::Client.new(region: 'ap-northeast-1', access_key_id: Rails.application.credentials[:access_key_id], secret_access_key: Rails.application.credentials[:secret_access_key])
 
         certification_number = rand(1000..9999)
 
         begin
-          sns.publish(phone_number: phone_number, message: "foremessage의 인증 번호는 #{certification_number}입니다.")
+          sns.publish(phone_number: "+82#{params[:phone_number]}", message: "foremessage의 인증 번호는 #{certification_number}입니다.")
           render json: { certification_number: certification_number, message: 'SUCCESS' }, status: :ok
         rescue => e
           render json: { message: e }, status: :bad_request
