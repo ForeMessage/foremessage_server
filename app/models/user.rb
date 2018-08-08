@@ -1,5 +1,6 @@
 class User < ApplicationRecord
-  before_save :encrypted_password
+  has_secure_password
+  #before_save :encrypted_password
 
   CRYPT_KEY = Rails.application.credentials.CRYPT_KEY
   def encrypted_password
