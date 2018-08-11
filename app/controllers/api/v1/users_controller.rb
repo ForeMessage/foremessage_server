@@ -1,7 +1,7 @@
 module Api
   module V1
     class UsersController < ApplicationController
-      before_action :set_user, only: [:show, :edit, :update, :destroy]
+      before_action :set_user, only: [:show, :update, :destroy]
 
       # GET /users
       # GET /users.json
@@ -20,17 +20,16 @@ module Api
         nickname = params[:nickname]
         password = params[:password]
 
-        user = if User.find_by_nickname(nickname)
-                 User.find_by_nickname(nickname)
-               else
-                 render json: { message: 'invalid nickname' }, status: :bad_request and return
-               end
+        user = User.find_by_nickname(nickname)
 
-        if user.password == password
-          render json: { message: 'success login' }, status: :ok
-        else
-          render json: { message: 'invalid password' }, status: :bad_request
-        end
+        # 유저 닉네임을 못 찾을 때
+        render json: { message: 'invalid nickname' }, status: :bad_request and return unless user.present?
+
+        # 비밀번호가 맞지 않을 때
+        render json: { message: 'invalid password' }, status: :unauthorized and return unless user.authenticate(password)
+
+        # SUCCESS LOGIN
+        render json: { message: 'success login' }, status: :ok
       end
 
       # POST /users
@@ -91,7 +90,7 @@ module Api
         certification_number = rand(1000..9999)
 
         begin
-          sns.publish(phone_number: "+82#{params[:phone_number]}", message: "foremessage의 인증 번호는 #{certification_number}입니다.")
+          sns.publish(phone_number: "+82#{phone_number}", message: "foremessage의 인증 번호는 #{certification_number}입니다.")
           render json: { certification_number: certification_number, message: 'SUCCESS' }, status: :ok
         rescue => e
           render json: { message: e }, status: :bad_request
@@ -106,7 +105,7 @@ module Api
 
       # Never trust parameters from the scary internet, only allow the white list through.
       def user_params
-        params.permit(:nickname, :password, :phone_number, :name, :birth_day)
+        params.permit(:nickname, :password, :password_confirmation, :phone_number, :name, :birth_day)
       end
     end
   end
