@@ -97,6 +97,23 @@ module Api
         end
       end
 
+      def find_nickname
+        name = params[:name]
+        phone_number = params[:phone_number]
+
+        user = User.find_nickname(name, phone_number)
+
+        if user.present?
+          render json: { nickname: user.first.nickname }, status: :ok
+        else
+          render json: { message: '유저를 찾을 수 없습니다.' }, status: :bad_request
+        end
+      end
+
+      def find_password
+
+      end
+
       private
       # Use callbacks to share common setup or constraints between actions.
       def set_user
