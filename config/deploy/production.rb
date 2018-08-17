@@ -1,6 +1,6 @@
 set :stage, :production
 set :branch, 'master'
-server '13.124.92.152', user: 'devops', roles: %w{web app db}
+server '13.209.189.253', user: 'ubuntu', roles: %w{web app db}
 
 # server-based syntax
 # ======================
