@@ -3,15 +3,14 @@ Rails.application.routes.draw do
 
   namespace :api, :defaults => {:format => :json} do
     namespace :v1 do
-      resources :users do
-        collection do
-          post 'check_nickname' => :check_nickname
-          post 'verify_number' => :verify_phone_number
-          post 'sign_in' => :sign_in
-          post 'sign_up' => :sign_up
-          post 'find_nickname' => :find_nickname
-          post 'find_password' => :find_password
-        end
+      namespace :users do
+        post 'sign_in' => 'sessions#sign_in'
+        post 'sign_up' => 'registrations#sign_up'
+        post 'check_nickname' => 'confirmations#check_nickname'
+        post 'verify_number' => 'confirmations#verify_phone_number'
+        post 'recovery_nickname' => 'recoveries#recovery_nickname'
+        post 'recovery_password' => 'recoveries#recovery_password'
+        post 'reset_password' => 'recoveries#reset_password'
       end
     end
   end
