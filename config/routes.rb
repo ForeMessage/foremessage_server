@@ -12,6 +12,10 @@ Rails.application.routes.draw do
         get 'recovery_nickname' => 'recoveries#recovery_nickname'
         get 'recovery_password' => 'recoveries#recovery_password'
       end
+
+      controller :message do
+        post 'send_message' => :send_message
+      end
     end
   end
 end
