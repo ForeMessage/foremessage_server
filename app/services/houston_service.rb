@@ -17,7 +17,7 @@ class HoustonService
   private
   def initialize
     @apn = Houston::Client.development
-    @apn.certificate = File.read('./fome_development_push.pem')
+    @apn.certificate = File.read('/var/www/foremessage_server/shared/cert/foremessage.pem')
   end
 
   def apn
