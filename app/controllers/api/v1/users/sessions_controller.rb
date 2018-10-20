@@ -12,7 +12,7 @@ class Api::V1::Users::SessionsController < ApplicationController
     # 비밀번호가 맞지 않을 때
     render json: { message: 'invalid password' }, status: :unauthorized and return unless user.authenticate(password)
 
-    user.refresh_device_token(params[:device_token])
+    user.token.refresh_token(params[:device_token])
 
     # SUCCESS LOGIN
     render json: { message: 'success login' }, status: :ok
