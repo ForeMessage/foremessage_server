@@ -10,12 +10,14 @@ class User < ApplicationRecord
 
   def create_payload_hash
     {
-        id: self.id,
-        nickname: self.nickname,
-        expired_at: Time.now.tomorrow,
-        created_at: self.created_at
+        iss: 'foremessage',
+        'https://api.foremessage.com/': true,
+        exp: Time.now.tomorrow.to_i,
+        iat: Time.now.to_i,
+        userId: u.id
     }
   end
+
   private
   def create_token
     self.build_token.save
