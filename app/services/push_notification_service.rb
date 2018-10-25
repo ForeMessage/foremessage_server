@@ -1,6 +1,6 @@
 require 'houston'
 
-class HoustonService
+class PushNotificationService
   def send_message(device_token, title, message)
     notification = Houston::Notification.new(device: device_token)
     notification.alert = message

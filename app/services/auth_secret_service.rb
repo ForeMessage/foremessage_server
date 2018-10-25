@@ -1,6 +1,15 @@
 class AuthSecretService
+  class RefreshTokenInvalidError < StandardError ; end
   class TokenInvalidError < StandardError ; end
   class TokenExpiredError < StandardError ; end
+
+  def check_refresh_token(user, refresh_token)
+    raise RefreshTokenInvalidError unless user.token.refresh_token == refresh_token
+
+    payload = user.create_payload_hash
+
+    encode(payload)
+  end
 
   def encode(payload)
     header = base64_data(@header)
