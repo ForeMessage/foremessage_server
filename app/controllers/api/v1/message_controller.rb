@@ -15,6 +15,6 @@ class Api::V1::MessageController < ApplicationController
 
   private
   def notification
-    @notification = HoustonService.new
+    @notification = PushNotificationService.new
   end
 end

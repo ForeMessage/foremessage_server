@@ -15,6 +15,6 @@ class Api::V1::Users::RegistrationsController < ApplicationController
   private
   # Never trust parameters from the scary internet, only allow the white list through.
   def user_params
-    params.permit(:nickname, :password, :password_confirmation, :phone_number, :name, :birthday)
+    params.permit(:phone_number, :device_id, :name, :birthday)
   end
 end
