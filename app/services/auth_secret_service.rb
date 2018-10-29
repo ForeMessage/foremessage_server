@@ -37,7 +37,7 @@ class AuthSecretService
 
   private
   def initialize
-    @key = Rails.application.credentials[:master_secret_key]
+    @key = 'mySe0cret1'
     @algorithm = 'HS256'
     @header = { 'typ': 'JWT',
                 'alg': @algorithm }
