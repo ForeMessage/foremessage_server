@@ -56,7 +56,7 @@ class Api::V1::UsersController < ApplicationController
 
       update_token(user, params[:device_token])
 
-      render json: { access_toekn: user.create_access_token, refresh_token: user.token.refresh_token }, status: :created
+      render json: { access_token: user.create_access_token, refresh_token: user.token.refresh_token }, status: :created
     rescue => e
       render json: { error: e }, status: :bad_request
     end
