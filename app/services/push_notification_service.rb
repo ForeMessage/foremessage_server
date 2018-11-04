@@ -1,13 +1,13 @@
 require 'houston'
 
 class PushNotificationService
-  def send_message(device_token, title, message)
-    notification = Houston::Notification.new(device: device_token)
-    notification.alert = message
+  def send_message(message_infos)
+    notification = Houston::Notification.new(device: User.find_by(phone_number: message_infos[:receiver]).token.device_token)
+    notification.alert = message_infos[:message]
 
     push_setting(notification)
 
-    notification.custom_data = { title: title, message: message }
+    notification.custom_data = message_infos
 
     apn.push(notification)
 
@@ -25,7 +25,7 @@ class PushNotificationService
   end
 
   def push_setting(notification)
-    # notification.badge = 57
+    # notification.badge = 100
     # notification.sound = 'sosumi.aiff'
     # notification.category = 'INVITE_CATEGORY'
     # notification.content_available = true
