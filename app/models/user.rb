@@ -20,14 +20,6 @@ class User < ApplicationRecord
     }
   end
 
-  def create_access_token
-    auth = AuthSecretService.new
-
-    payload = self.create_payload_hash
-
-    auth.encode(payload)
-  end
-
   private
   def create_token
     self.build_token.save
