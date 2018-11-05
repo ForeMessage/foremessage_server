@@ -1,5 +1,6 @@
 class Api::V1::UsersController < ApplicationController
   skip_before_action :check_access_token, only: [:verify_number, :check_user, :sign_in, :check_in, :sign_up]
+  before_action :load_secret_service, only: [:sign_up, :sign_in, :check_in]
 
   # 번호 인증
   def verify_number
@@ -35,14 +36,14 @@ class Api::V1::UsersController < ApplicationController
 
     update_token(user, params[:device_token])
 
-    render json: { access_token: user.create_access_token, refresh_token: user.token.refresh_token }, status: :ok
+    render json: { access_token: @auth_secret.create_token(user), refresh_token: user.token.refresh_token }, status: :ok
   end
 
   def sign_in
     user = User.find_by(phone_number: params[:phone_number])
 
     begin
-      access_token = AuthSecretService.new.check_refresh_token(user, params[:refresh_token])
+      access_token = @auth_secret.check_refresh_token(user, params[:refresh_token])
 
       render json: { access_token: access_token, refresh_token: params[:refresh_token] }, status: :ok
     rescue => e
@@ -56,7 +57,7 @@ class Api::V1::UsersController < ApplicationController
 
       update_token(user, params[:device_token])
 
-      render json: { access_token: user.create_access_token, refresh_token: user.token.refresh_token }, status: :created
+      render json: { access_token: @auth_secret.create_token(user), refresh_token: user.token.refresh_token }, status: :created
     rescue => e
       render json: { error: e }, status: :bad_request
     end
@@ -74,5 +75,9 @@ class Api::V1::UsersController < ApplicationController
   def update_phone_number(user)
     after_phone_number = 'deleted_' + user.phone_number
     user.update_attributes(phone_number: after_phone_number)
+  end
+
+  def load_secret_service
+    @auth_secret = AuthSecretService.new
   end
 end

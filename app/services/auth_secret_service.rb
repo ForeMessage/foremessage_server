@@ -11,6 +11,14 @@ class AuthSecretService
     encode(payload)
   end
 
+  def create_token(user)
+    auth = AuthSecretService.new
+
+    payload = user.create_payload_hash
+
+    auth.encode(payload)
+  end
+
   def encode(payload)
     header = base64_data(@header)
     payload = base64_data(payload)
