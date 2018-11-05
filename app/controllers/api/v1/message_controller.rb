@@ -5,18 +5,21 @@ class Api::V1::MessageController < ApplicationController
   def send_message
     message = params[:message]
     receiver = params[:receiver]
-    sender = params[:sender]
 
     message_info = {
-        sender: sender,
+        sender: session[:user_number],
         receiver: receiver,
         message: message,
         time: Time.now
     }
 
-    res = @notification.send_message(message_info)
+    begin
+      @notification.send_message(message_info)
+    rescue => e
+      render json: { error: e }, status: :bad_request and return
+    end
 
-    render json: { res: res.as_json }
+    render json: { }, status: :ok
   end
 
   private
