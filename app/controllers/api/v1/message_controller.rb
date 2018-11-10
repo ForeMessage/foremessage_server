@@ -5,9 +5,10 @@ class Api::V1::MessageController < ApplicationController
   def send_message
     message = params[:message]
     receiver = params[:receiver]
+    sender = params[:sender]
 
     message_info = {
-        sender: session[:user_number],
+        sender: sender,
         receiver: receiver,
         message: message,
         time: Time.now
