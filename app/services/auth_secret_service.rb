@@ -3,31 +3,22 @@ class AuthSecretService
   class TokenInvalidError < StandardError ; end
   class TokenExpiredError < StandardError ; end
 
-  def check_refresh_token(user, refresh_token)
+  def valid_refresh_token?(user, refresh_token)
+    decode(refresh_token)
     raise RefreshTokenInvalidError unless user.token.refresh_token == refresh_token
 
-    payload = user.create_payload_hash
+    true
+  end
+
+  def create_token(user, token)
+    payload = user.create_payload_hash(token)
 
     encode(payload)
   end
 
-  def create_token(user)
-    auth = AuthSecretService.new
-
-    payload = user.create_payload_hash
-
-    auth.encode(payload)
-  end
-
-  def encode(payload)
-    header = base64_data(@header)
-    payload = base64_data(payload)
-    signature = sign([header, payload].join('.'))
-
-    [header, payload, signature].join('.')
-  end
-
   def decode(token)
+    raise TokenInvalidError unless token.include?('.')
+
     segments = token.split('.')
     signature = base64url_decode(segments[2])
     signing_input = segments.first(2).join('.')
@@ -49,6 +40,14 @@ class AuthSecretService
     @algorithm = 'HS256'
     @header = { 'typ': 'JWT',
                 'alg': @algorithm }
+  end
+
+  def encode(payload)
+    header = base64_data(@header)
+    payload = base64_data(payload)
+    signature = sign([header, payload].join('.'))
+
+    [header, payload, signature].join('.')
   end
 
   def expired_token?(payload)

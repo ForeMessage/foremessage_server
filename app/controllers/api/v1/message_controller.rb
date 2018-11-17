@@ -1,7 +1,6 @@
 class Api::V1::MessageController < ApplicationController
   before_action :notification, only: :send_message
 
-
   def send_message
     message = params[:message]
     receiver = params[:receiver]

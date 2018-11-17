@@ -1,6 +1,6 @@
 class Api::V1::UsersController < ApplicationController
-  skip_before_action :check_access_token, only: [:verify_number, :check_user, :sign_in, :check_in, :sign_up]
-  before_action :load_secret_service, only: [:sign_up, :sign_in, :check_in]
+  skip_before_action :check_access_token, only: [:verify_number, :check_user, :sign_in, :check_in, :sign_up, :refresh_access_token]
+  before_action :load_secret_service, only: [:sign_up, :sign_in, :check_in, :refresh_access_token]
 
   # 번호 인증
   def verify_number
@@ -36,16 +36,32 @@ class Api::V1::UsersController < ApplicationController
 
     update_token(user, params[:device_token])
 
-    render json: { access_token: @auth_secret.create_token(user), refresh_token: user.token.refresh_token }, status: :ok
+    render json: { access_token: @auth_secret.create_token(user, 'access_token'), refresh_token: user.token.refresh_token }, status: :ok
   end
 
   def sign_in
     user = User.find_by(phone_number: params[:phone_number])
 
     begin
-      access_token = @auth_secret.check_refresh_token(user, params[:refresh_token])
+      if @auth_secret.valid_refresh_token?(user, params[:refresh_token])
+        refresh_token = @auth_secret.create_token(user, 'refresh_token')
+        user.token.update_attributes(refresh_token: refresh_token)
+      end
+      access_token = @auth_secret.create_token(user, 'access_token')
 
-      render json: { access_token: access_token, refresh_token: params[:refresh_token] }, status: :ok
+      render json: { access_token: access_token, refresh_token: refresh_token }, status: :ok
+    rescue => e
+      render json: { error: e }, status: :forbidden
+    end
+  end
+
+  def refresh_access_token
+    user = User.find_by(phone_number: params[:phone_number])
+
+    begin
+      access_token = @auth_secret.create_token(user, 'access_token') if @auth_secret.valid_refresh_token?(user, params[:refresh_token])
+
+      render json: { access_token: access_token }, status: :ok
     rescue => e
       render json: { error: e }, status: :forbidden
     end
@@ -57,7 +73,7 @@ class Api::V1::UsersController < ApplicationController
 
       update_token(user, params[:device_token])
 
-      render json: { access_token: @auth_secret.create_token(user), refresh_token: user.token.refresh_token }, status: :created
+      render json: { access_token: @auth_secret.create_token(user, 'access_token'), refresh_token: user.token.refresh_token }, status: :created
     rescue => e
       render json: { error: e }, status: :bad_request
     end
