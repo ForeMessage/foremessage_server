@@ -6,7 +6,6 @@ class ApplicationController < ActionController::Base
   before_action :check_access_token
 
   def check_access_token
-    puts request.headers[:Authorization]
     raise Exceptions::RequestHeaderMissingError.new(:Authorization) unless request.headers[:Authorization].present?
 
     auth_secret_service = AuthSecretService.new

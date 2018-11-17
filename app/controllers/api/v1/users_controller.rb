@@ -69,9 +69,9 @@ class Api::V1::UsersController < ApplicationController
     begin
       access_token = @auth_secret.create_token(user, 'access_token') if @auth_secret.valid_refresh_token?(user, params[:refresh_token])
 
-      render json: { access_token: access_token }, status: :ok
+      success_response(extra_parameters: { access_token: access_token })
     rescue => e
-      render json: { error: e }, status: :forbidden
+      error_response(status: :forbidden, message: e.message) and return
     end
   end
 
