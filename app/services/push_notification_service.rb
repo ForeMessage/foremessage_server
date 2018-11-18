@@ -8,10 +8,11 @@ class PushNotificationService
     push_setting(notification)
 
     notification.custom_data = message_infos
+    notification.mutable_content = 1
 
     apn.push(notification)
 
-    notification.custom_data
+    notification
   end
 
   private

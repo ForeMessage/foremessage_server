@@ -14,12 +14,12 @@ class Api::V1::MessageController < ApplicationController
     }
 
     begin
-      @notification.send_message(message_info)
+      apns = @notification.send_message(message_info)
     rescue => e
       render json: { error: e }, status: :bad_request and return
     end
 
-    render json: { }, status: :ok
+    render json: { apns: apns }, status: :ok
   end
 
   private
