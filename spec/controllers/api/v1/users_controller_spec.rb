@@ -10,7 +10,7 @@ RSpec.describe Api::V1::UsersController, type: :controller do
         get :check_user, params: { phone_number: '01012341234', device_id: 'test_device_2' }
 
         body = JSON.parse(response.body)
-        expect(body['exist_user']).to eq false
+        expect(body['data']['exist_user']).to eq false
       end
     end
 
@@ -19,7 +19,7 @@ RSpec.describe Api::V1::UsersController, type: :controller do
         get :check_user, params: { phone_number: '01011111111', device_id: 'test_device_1' }
 
         body = JSON.parse(response.body)
-        expect(body['exist_user']).to eq true
+        expect(body['data']['exist_user']).to eq true
       end
     end
 
@@ -29,7 +29,7 @@ RSpec.describe Api::V1::UsersController, type: :controller do
         user.reload
 
         body = JSON.parse(response.body)
-        expect(body['exist_user']).to eq false
+        expect(body['data']['exist_user']).to eq false
         expect(user.phone_number).to eq 'deleted_01011111111'
       end
     end
@@ -46,8 +46,8 @@ RSpec.describe Api::V1::UsersController, type: :controller do
         body = JSON.parse(response.body)
         expect(user.token.device_token).to eq 'test_device_token'
 
-        access_token_body = AuthSecretService.new.decode body['access_token']
-        refresh_token_body = AuthSecretService.new.decode body['refresh_token']
+        access_token_body = AuthSecretService.new.decode body['data']['access_token']
+        refresh_token_body = AuthSecretService.new.decode body['data']['refresh_token']
 
         expect(access_token_body['user_id']).to eq user.id
         expect(refresh_token_body['user_id']).to eq user.id
@@ -66,8 +66,8 @@ RSpec.describe Api::V1::UsersController, type: :controller do
 
         body = JSON.parse(response.body)
 
-        access_token_body = AuthSecretService.new.decode body['access_token']
-        refresh_token_body = AuthSecretService.new.decode body['refresh_token']
+        access_token_body = AuthSecretService.new.decode body['data']['access_token']
+        refresh_token_body = AuthSecretService.new.decode body['data']['refresh_token']
 
         expect(access_token_body['user_id']).to eq user.id
         expect(refresh_token_body['user_id']).to eq user.id
@@ -96,7 +96,7 @@ RSpec.describe Api::V1::UsersController, type: :controller do
 
         body = JSON.parse(response.body)
 
-        access_token_body = AuthSecretService.new.decode body['access_token']
+        access_token_body = AuthSecretService.new.decode body['data']['access_token']
         expect(access_token_body['user_id']).to eq user.id
       end
     end
