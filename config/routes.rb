@@ -20,6 +20,12 @@ Rails.application.routes.draw do
           post 'send' => :send_message
         end
       end
+
+      scope :friendships do
+        controller :friendships do
+          post 'load' => :load_friendships
+        end
+      end
     end
   end
 end

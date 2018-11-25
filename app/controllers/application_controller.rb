@@ -13,9 +13,8 @@ class ApplicationController < ActionController::Base
     access_token = request.headers[:Authorization].gsub(/^Bearer /, '')
     begin
       body = auth_secret_service.decode(access_token)
-      session[:user_number] = body['user_phone_number']
+      session[:user] = User.find_by(phone_number: body['user_phone_number'])
     rescue AuthSecretService::TokenExpiredError => e
-      render :json => { result: e }, status: :unauthorized
       error_response(status: :unauthorized, message: e.message) and return
     rescue AuthSecretService::TokenInvalidError => e
       error_response(status: :unauthorized, message: e.message) and return

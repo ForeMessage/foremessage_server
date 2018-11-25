@@ -2,7 +2,7 @@ require 'houston'
 
 class PushNotificationService
   def send_message(message_infos)
-    notification = Houston::Notification.new(device: User.find_by(phone_number: message_infos[:receiver]).token.device_token)
+    notification = Houston::Notification.new(device: message_infos[:receiver])
     notification.alert = message_infos[:message]
 
     push_setting(notification)
