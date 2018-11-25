@@ -4,19 +4,30 @@ class Api::V1::MessageController < ApplicationController
     raise Exceptions::ParameterMissingError.new(:sender) unless params[:sender].present?
     raise Exceptions::ParameterMissingError.new(:receiver) unless params[:receiver].present?
 
-    message_info = {
-        sender: params[:sender],
-        receiver: params[:receiver],
-        message: params[:message],
-        time: Time.now
-    }
+    receiver_array = JSON.parse(params[:receiver])
 
-    begin
-      PushNotificationService.new.send_message(message_info)
-    rescue => e
-      error_response(status: :bad_request, message: e.message) and return
+    success_send = []
+
+    receivers = User.where(phone_number: receiver_array)
+
+    receivers.each do |receiver|
+      message_info = {
+          sender: params[:sender],
+          receiver: receiver.token.device_token,
+          message: params[:message],
+          time: Time.now
+      }
+
+      message_info.merge!({ send_at: params[:send_at] }) if params[:send_at].present?
+
+      begin
+        PushNotificationService.new.send_message(message_info)
+        success_send << receiver.phone_number
+      rescue => e
+        puts "FAIL SEND MESSAGE => #{e.message}"
+      end
     end
 
-    success_response(message: 'SUCCESS SEND MESSAGE')
+    success_response(message: 'SUCCESS SEND MESSAGE', extra_parameters: { success_send: success_send, fail_send: receiver_array - success_send })
   end
 end
