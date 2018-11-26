@@ -4,7 +4,7 @@ class Api::V1::MessageController < ApplicationController
     raise Exceptions::ParameterMissingError.new(:sender) unless params[:sender].present?
     raise Exceptions::ParameterMissingError.new(:receiver) unless params[:receiver].present?
 
-    receiver_array = JSON.parse(params[:receiver])
+    receiver_array = params[:receiver]
 
     success_send = []
 
