@@ -1,8 +1,8 @@
 require 'houston'
 
 class PushNotificationService
-  def send_message(message_infos)
-    notification = Houston::Notification.new(device: message_infos[:receiver])
+  def send_message(message_infos, token)
+    notification = Houston::Notification.new(device: token)
     notification.alert = message_infos[:message]
 
     push_setting(notification)
@@ -18,7 +18,7 @@ class PushNotificationService
   private
   def initialize
     @apn = Houston::Client.development
-    @apn.certificate = File.read('/var/www/foremessage_server/shared/cert/foremessage.pem')
+    @apn.certificate = File.read('./foremessage.pem')
   end
 
   def apn
