@@ -13,7 +13,7 @@ class Api::V1::MessageController < ApplicationController
     receivers.each do |receiver|
       message_info = {
           sender: params[:sender],
-          receiver: receiver.token.device_token,
+          receiver: receiver.phone_number,
           message: params[:message],
           time: Time.now
       }
@@ -21,7 +21,7 @@ class Api::V1::MessageController < ApplicationController
       message_info.merge!({ send_at: params[:send_at] }) if params[:send_at].present?
 
       begin
-        PushNotificationService.new.send_message(message_info)
+        PushNotificationService.new.send_message(message_info, receiver.token.device_token)
         success_send << receiver.phone_number
       rescue => e
         puts "FAIL SEND MESSAGE => #{e.message}"
