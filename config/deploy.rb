@@ -6,6 +6,7 @@ set :repo_url, 'git@github.com:ForeMessage/foremessage_server.git'
 set :deploy_to, '/var/www/foremessage_server'
 set :bundle_flags, ""
 set :use_sudo, true
+set :rbenv_ruby, '2.5.0'
 
 set :passenger_restart_with_sudo, true
 set :passenger_restart_with_touch, true
