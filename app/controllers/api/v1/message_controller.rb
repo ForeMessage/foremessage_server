@@ -20,6 +20,12 @@ class Api::V1::MessageController < ApplicationController
 
       message_info.merge!({ send_at: params[:send_at] }) if params[:send_at].present?
 
+      if params[:image].present?
+        image = MiniMagick::Image.open(params[:image].path)
+
+        message_info.merge!({ image: image })
+      end
+
       begin
         PushNotificationService.new.send_message(message_info, receiver.token.device_token)
         success_send << receiver.phone_number
@@ -29,5 +35,25 @@ class Api::V1::MessageController < ApplicationController
     end
 
     success_response(message: 'SUCCESS SEND MESSAGE', extra_parameters: { success_send: success_send, fail_send: receiver_array - success_send })
+  end
+
+  def send_secret
+    receiver_array = params[:receiver]
+
+    receiver = User.where(phone_number: receiver_array).first
+
+    image = MiniMagick::Image.open(params[:image].path)
+    image.draw 'image Over 0,0 0,0 "foremessage_logo.png"'
+
+    message_info = {
+        sender: params[:sender],
+        receiver: receiver.phone_number,
+        message: image,
+        time: Time.now
+    }
+
+    PushNotificationService.new.send_message(message_info, receiver.token.device_token)
+
+    success_response(message: 'SUCCESS SEND SECRET MESSAGE', extra_parameters: { image: image })
   end
 end
