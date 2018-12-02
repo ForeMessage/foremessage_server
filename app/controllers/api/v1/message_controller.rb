@@ -32,13 +32,17 @@ class Api::V1::MessageController < ApplicationController
             f.write temp_image.to_s
           end
 
-          image = MiniMagick::Image.open(temp_file.path)
+          image = Magick::ImageList.new
+          bin = File.open(temp_file, 'r'){ |file| file.read }
+          img = image.from_blob(bin)
+
+          # image = MiniMagick::Image.open(temp_file.path)
         rescue => e
-          logger.debug "message: #{e.message} class: #{temp_file.class}, methods: #{temp_file.methods}"
+          logger.debug "message: #{e.message} class: #{img.class}, methods: #{img.methods}"
           error_response(message: 'FAIL', extra_parameters: { class: temp_image.class, methods: temp_image.methods }) and return
         end
 
-        message_info.merge!({ image: image })
+        message_info.merge!({ image: img })
       end
 
       begin
