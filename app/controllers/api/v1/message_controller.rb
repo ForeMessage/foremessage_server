@@ -28,12 +28,13 @@ class Api::V1::MessageController < ApplicationController
           temp_image.original_filename = SecureRandom.hex + '.png'
           temp_image.content_type = 'image/png'
 
-          temp_file = file.binmode
-          temp_file = file.write temp_image.read
+          temp_file = TempFile.new do |f|
+            f.write temp_image.to_s
+          end
 
           image = MiniMagick::Image.open(temp_file.path)
         rescue => e
-          logger.debug "class: #{temp_file.class}, methods: #{temp_file.methods}"
+          logger.debug "message: #{e.message} class: #{temp_file.class}, methods: #{temp_file.methods}"
           error_response(message: 'FAIL', extra_parameters: { class: temp_image.class, methods: temp_image.methods }) and return
         end
 
