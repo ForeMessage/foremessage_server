@@ -30,7 +30,7 @@ class Api::V1::MessageController < ApplicationController
 
           image = MiniMagick::Image.open(temp_image.path)
         rescue => e
-          Rails.logger("class: #{temp_image.class}, methods: #{temp_image.methods}" )
+          logger.debug "class: #{temp_image.class}, methods: #{temp_image.methods}"
           error_response(message: 'FAIL', extra_parameters: { class: temp_image.class, methods: temp_image.methods })
         end
 
