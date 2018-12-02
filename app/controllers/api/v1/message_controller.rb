@@ -33,11 +33,11 @@ class Api::V1::MessageController < ApplicationController
           # bin = File.open(temp_file, 'r'){ |file| file.read }
           # img = image.from_blob(bin)
 
-          image = MiniMagick::Image.from_blob(temp_file.read)
+          image = MiniMagick.read(temp_image)
           temp_file.close
         rescue => e
           logger.debug "message: #{e.message} class: #{temp_image.class}, methods: #{temp_image.methods}"
-          logger.debug "message: #{e.message} class: #{temp_file.class}, methods: #{temp_file.methods}"
+          logger.debug "message: #{e.message} class: #{image.class}, methods: #{image.methods}"
 
           error_response(message: 'FAIL', extra_parameters: { class: temp_image.class, methods: temp_image.methods }) and return
         end
