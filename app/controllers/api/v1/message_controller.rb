@@ -24,9 +24,6 @@ class Api::V1::MessageController < ApplicationController
 
         begin
           temp_image = StringIO.new(Base64.decode64(params[:image].tr(' ', '+')))
-          temp_image.class.class_eval { attr_accessor :original_filename, :content_type }
-          temp_image.original_filename = SecureRandom.hex + '.png'
-          temp_image.content_type = 'image/png'
 
           temp_file = Tempfile.new(['hello', '.png']) do |f|
             f.write temp_image.to_s
@@ -38,7 +35,9 @@ class Api::V1::MessageController < ApplicationController
 
           image = MiniMagick::Image.open(temp_file.path)
         rescue => e
-          logger.debug "message: #{e.message} class: #{img.class}, methods: #{img.methods}"
+          logger.debug "message: #{e.message} class: #{temp_image.class}, methods: #{temp_image.methods}"
+          logger.debug "message: #{e.message} class: #{temp_file.class}, methods: #{temp_file.methods}"
+
           error_response(message: 'FAIL', extra_parameters: { class: temp_image.class, methods: temp_image.methods }) and return
         end
 
