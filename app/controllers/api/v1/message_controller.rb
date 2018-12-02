@@ -21,7 +21,8 @@ class Api::V1::MessageController < ApplicationController
       message_info.merge!({ send_at: params[:send_at] }) if params[:send_at].present?
 
       if params[:image].present?
-        image = MiniMagick::Image.open(params[:image].path)
+        temp_image = JSON.parse(params[:image])
+        image = MiniMagick::Image.open(temp_image.path)
 
         message_info.merge!({ image: image })
       end
