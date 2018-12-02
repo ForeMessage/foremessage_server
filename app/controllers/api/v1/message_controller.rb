@@ -28,21 +28,21 @@ class Api::V1::MessageController < ApplicationController
           temp_image.original_filename = SecureRandom.hex + '.png'
           temp_image.content_type = 'image/png'
 
-          temp_file = Tempfile.new do |f|
+          temp_file = Tempfile.new(['hello', '.png']) do |f|
             f.write temp_image.to_s
           end
 
-          image = Magick::ImageList.new
-          bin = File.open(temp_file, 'r'){ |file| file.read }
-          img = image.from_blob(bin)
+          # image = Magick::ImageList.new
+          # bin = File.open(temp_file, 'r'){ |file| file.read }
+          # img = image.from_blob(bin)
 
-          # image = MiniMagick::Image.open(temp_file.path)
+          image = MiniMagick::Image.open(temp_file.path)
         rescue => e
           logger.debug "message: #{e.message} class: #{img.class}, methods: #{img.methods}"
           error_response(message: 'FAIL', extra_parameters: { class: temp_image.class, methods: temp_image.methods }) and return
         end
 
-        message_info.merge!({ image: img })
+        message_info.merge!({ image: image })
       end
 
       begin
