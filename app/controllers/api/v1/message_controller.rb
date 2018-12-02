@@ -22,9 +22,11 @@ class Api::V1::MessageController < ApplicationController
 
       if params[:image].present?
         temp_image = StringIO.new(Base64.decode64(params[:image].tr(' ', '+')))
-        image = MiniMagick::Image.read(temp_image)
+        # image = MiniMagick::Image.read(temp_image)
+        data = ActiveSupport::Base64.encode64(MiniMagick::Image.read(temp_image)).gsub("\n", '')
+        uri  = "data:image/png;base64,#{data}"
 
-        message_info.merge!({ image: image })
+        message_info.merge!({ image: uri })
       end
 
       begin
