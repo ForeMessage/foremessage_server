@@ -28,7 +28,7 @@ class Api::V1::MessageController < ApplicationController
           temp_image.original_filename = SecureRandom.hex + '.png'
           temp_image.content_type = 'image/png'
 
-          temp_file = TempFile.new do |f|
+          temp_file = Tempfile.new do |f|
             f.write temp_image.to_s
           end
 
