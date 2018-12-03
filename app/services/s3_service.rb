@@ -11,9 +11,10 @@ class S3Service
   end
 
   def upload_image(image)
-    obj = @bucket.object("uploads/#{image.data['baseName']}")
+    obj = @bucket.object("uploads/#{image.data['baseName']}t.png")
     obj.upload_file(File.open(image.tempfile), acl:'public-read')
 
+    logger.debug "#{image.data['baseName']}"
     obj.public_url
   end
 end
