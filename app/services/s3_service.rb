@@ -14,7 +14,6 @@ class S3Service
     obj = @bucket.object("uploads/#{image.data['baseName']}t.png")
     obj.upload_file(File.open(image.tempfile), acl:'public-read')
 
-    Rails.logger.debug "#{image.data['baseName']}"
     obj.public_url
   end
 end

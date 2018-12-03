@@ -47,7 +47,7 @@ class Api::V1::MessageController < ApplicationController
 
     temp_image = StringIO.new(Base64.decode64(params[:image].tr(' ', '+')))
     image = MiniMagick::Image.read(temp_image)
-    image.draw "image Over 150,550 0,0 'foremessage_logo.png'"
+    image.draw "image Over 20,550 0,0 'foremessage_logo.png'"
 
     link = S3Service.new.upload_image(image)
 
