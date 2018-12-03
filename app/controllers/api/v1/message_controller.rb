@@ -24,7 +24,9 @@ class Api::V1::MessageController < ApplicationController
         temp_image = StringIO.new(Base64.decode64(params[:image].tr(' ', '+')))
         image = MiniMagick::Image.read(temp_image)
 
-        message_info.merge!({ image: params[:image] })
+        link = S3Service.new.upload_image(image)
+
+        message_info.merge!({ image: link })
       end
 
       begin
@@ -47,15 +49,17 @@ class Api::V1::MessageController < ApplicationController
     image = MiniMagick::Image.read(temp_image)
     image.draw 'image Over 0,0 0,0 "foremessage_logo.png"'
 
+    link = S3Service.new.upload_image(image)
+
     message_info = {
         sender: params[:sender],
         receiver: receiver.phone_number,
-        message: image,
+        message: link,
         time: Time.now
     }
 
     PushNotificationService.new.send_message(message_info, receiver.token.device_token)
 
-    success_response(message: 'SUCCESS SEND SECRET MESSAGE', extra_parameters: { image: image })
+    success_response(message: 'SUCCESS SEND SECRET MESSAGE', extra_parameters: { image: link })
   end
 end
