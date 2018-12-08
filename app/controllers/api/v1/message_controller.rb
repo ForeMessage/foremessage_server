@@ -24,7 +24,9 @@ class Api::V1::MessageController < ApplicationController
         temp_image = StringIO.new(Base64.decode64(params[:image].tr(' ', '+')))
         image = MiniMagick::Image.read(temp_image)
 
-        link = S3Service.new.upload_image(image)
+        file_name = "#{Base64.encode64(receiver.id.to_s)}_#{Time.now.to_i}.png"
+
+        link = S3Service.new.upload_image(image, file_name)
 
         message_info.merge!({ image: link })
       end

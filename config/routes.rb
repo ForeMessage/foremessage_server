@@ -22,9 +22,9 @@ Rails.application.routes.draw do
         end
       end
 
-      scope :friendships do
-        controller :friendships do
-          post 'load' => :load_friendships
+      scope :friends do
+        controller :friends do
+          post 'load_birthday' => :load_birthday
         end
       end
     end
