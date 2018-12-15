@@ -51,7 +51,7 @@ class Api::V1::MessageController < ApplicationController
     image = MiniMagick::Image.read(temp_image)
     image.draw "image Over 20,550 0,0 'foremessage_logo.png'"
 
-    link = S3Service.new.upload_image(image)
+    link = S3Service.new.upload_image(image, 'test.png')
 
     message_info = {
         sender: params[:sender],
