@@ -81,7 +81,7 @@ class Api::V1::MessageController < ApplicationController
         message: "#{sender_name}님이 보낸 등기 메시지를 #{receiver_name}님이 확인하였습니다."
     }
 
-    PushNotificationService.new.send_message(message_info, receiver.token.device_token)
+    PushNotificationService.new.send_message(message_info, User.find_by(phone_number: sender).token.device_token)
 
     success_response(message: 'SUCCESS SEND SECRET MESSAGE')
   end
