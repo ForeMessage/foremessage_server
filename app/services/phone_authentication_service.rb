@@ -9,6 +9,12 @@ class PhoneAuthenticationService
     @certification_number
   end
 
+  def send_message_to_unknown(phone_numbers, sender)
+    phone_numbers.each do |number|
+      @aws.publish(phone_number: "+82#{number}", message: "#{sender}님에게 등기메시지가 왔습니다. 확인하려면 앱을 다운로드하세요. https://www.apple.com/itunes/charts/free-apps/")
+    end
+  end
+
   private
   def initialize
     @aws = Aws::SNS::Client.new(region: AWS_REGION,
