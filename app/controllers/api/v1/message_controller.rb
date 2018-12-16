@@ -47,7 +47,7 @@ class Api::V1::MessageController < ApplicationController
 
     receivers = User.where(phone_number: receiver_array)
     non_users = receiver_array - receivers.pluck(:phone_number)
-    PhoneAuthenticationService.new.send_message_to_unknown(non_users, sender)
+    PhoneAuthenticationService.new.send_message_to_unknown(non_users, params[:sender])
 
     temp_image = StringIO.new(Base64.decode64(params[:image].tr(' ', '+')))
     image = MiniMagick::Image.read(temp_image)
