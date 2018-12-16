@@ -59,7 +59,8 @@ class Api::V1::MessageController < ApplicationController
       message_info = {
           sender: params[:sender],
           receiver: receiver.phone_number,
-          message: '등기 메시지가 도착했습니다.',
+          message: link,
+          show_message: '등기 메시지가 도착했습니다.',
           time: Time.now
       }
 
