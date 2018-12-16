@@ -15,6 +15,20 @@ class PushNotificationService
     notification
   end
 
+  def send_secret(message_infos, token)
+    notification = Houston::Notification.new(device: token)
+    notification.alert = '등기 메시지가 도착했습니다.'
+
+    push_setting(notification)
+
+    notification.custom_data = message_infos
+    notification.mutable_content = 1
+
+    apn.push(notification)
+
+    notification
+  end
+
   private
   def initialize
     @apn = Houston::Client.development

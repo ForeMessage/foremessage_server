@@ -60,11 +60,10 @@ class Api::V1::MessageController < ApplicationController
           sender: params[:sender],
           receiver: receiver.phone_number,
           message: link,
-          show_message: '등기 메시지가 도착했습니다.',
           time: Time.now
       }
 
-      PushNotificationService.new.send_message(message_info, receiver.token.device_token)
+      PushNotificationService.new.send_secret(message_info, receiver.token.device_token)
     end
 
     success_response(message: 'SUCCESS SEND SECRET MESSAGE', extra_parameters: { image: link })
