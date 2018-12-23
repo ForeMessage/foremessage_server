@@ -18,9 +18,6 @@ Rails.application.routes.draw do
       scope :message do
         controller :message do
           post 'send' => :send_message
-          post 'send_secret' => :send_secret
-          post 'send_check_push' => :send_check_push
-          post 'send_confirm_push' => :send_confirm_push
         end
       end
 
