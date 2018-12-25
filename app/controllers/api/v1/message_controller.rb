@@ -41,4 +41,36 @@ class Api::V1::MessageController < ApplicationController
 
     success_response(message: 'SUCCESS SEND MESSAGE', extra_parameters: { success_send: success_send, fail_send: receiver_array - success_send })
   end
+
+  def send_reservation
+    raise Exceptions::ParameterMissingError.new(:message) unless params[:message].present?
+    raise Exceptions::ParameterMissingError.new(:sender) unless params[:sender].present?
+    raise Exceptions::ParameterMissingError.new(:receiver) unless params[:receiver].present?
+
+    receiver_array = params[:receiver]
+
+    receivers = User.where(phone_number: receiver_array)
+
+    receivers.each do |receiver|
+      link = if params[:image].present?
+               temp_image = StringIO.new(Base64.decode64(params[:image].tr(' ', '+')))
+               image = MiniMagick::Image.read(temp_image)
+
+               file_name = "#{Base64.encode64(receiver.id.to_s)}_#{Time.now.to_i}.png"
+
+               S3Service.new.upload_image(image, file_name)
+             end
+
+      ReservationMessage.create(
+          sender: params[:sender],
+          receiver: receiver.phone_number,
+          receiver_token: receiver.token.device_token,
+          message: params[:message],
+          image: link,
+          send_at: params[:send_at]
+      )
+    end
+
+    success_response(message: 'SUCCESS SEND MESSAGE TO UNKNOWN')
+  end
 end
