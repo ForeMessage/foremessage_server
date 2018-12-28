@@ -19,6 +19,8 @@ Rails.application.routes.draw do
         controller :message do
           post 'send' => :send_message
           post 'send_reservation' => :send_reservation
+
+          delete 'delete_reservation' => :delete_reservation
         end
       end
 

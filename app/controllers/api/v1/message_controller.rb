@@ -48,6 +48,7 @@ class Api::V1::MessageController < ApplicationController
     raise Exceptions::ParameterMissingError.new(:receiver) unless params[:receiver].present?
 
     receiver_array = params[:receiver]
+    reservation_messages = []
 
     receivers = User.where(phone_number: receiver_array)
 
@@ -61,7 +62,7 @@ class Api::V1::MessageController < ApplicationController
                S3Service.new.upload_image(image, file_name)
              end
 
-      ReservationMessage.create(
+      reservation_message = ReservationMessage.create(
           sender: params[:sender],
           receiver: receiver.phone_number,
           receiver_token: receiver.token.device_token,
@@ -69,8 +70,22 @@ class Api::V1::MessageController < ApplicationController
           image: link,
           send_at: params[:send_at]
       )
+
+      reservation_messages << reservation_message.id
     end
 
-    success_response(message: 'SUCCESS SEND MESSAGE TO UNKNOWN')
+    success_response(message: 'SUCCESS SEND MESSAGE TO UNKNOWN', extra_parameters: { reservation_id: "#{reservation_messages.first}..#{reservation_messages.last}" })
+  end
+
+  def delete_reservation
+    raise Exceptions::ParameterMissingError.new(:reservation_id) unless params[:reservation_id].present?
+
+    puts params[:reservation_id]
+    message_array = params[:reservation_id].split('..')
+    range = Range.new(message_array[0], message_array[1])
+
+    delete_size = ReservationMessage.where(id: range.to_a).delete_all
+
+    success_response(message: "SUCCESS DELETE RESERVATION MESSAGE => #{delete_size}")
   end
 end
