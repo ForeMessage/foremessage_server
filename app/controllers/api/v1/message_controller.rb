@@ -35,7 +35,7 @@ class Api::V1::MessageController < ApplicationController
         PushNotificationService.new.send_message(message_info, receiver.token.device_token)
         success_send << receiver.phone_number
       rescue => e
-        puts "FAIL SEND MESSAGE => #{e.message}"
+        logger.debug "FAIL SEND MESSAGE => #{e.message}"
       end
     end
 
