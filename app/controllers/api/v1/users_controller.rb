@@ -89,6 +89,19 @@ class Api::V1::UsersController < ApplicationController
     end
   end
 
+  def update
+    raise Exceptions::ParameterMissingError.new(:user_id) unless params[:user_id].present?
+
+    attributes = {}
+    attributes.merge!({name: params[:name]}) if params[:name].present?
+    attributes.merge!({birthday: params[:birthday]}) if params[:birthday].present?
+    puts params[:name]
+    puts attributes
+    User.find(params[:user_id]).update_attributes(attributes)
+
+    success_response(message: 'UPDATE USER DATA')
+  end
+
   private
   def user_params
     params.permit(:phone_number, :device_id, :name, :birthday)

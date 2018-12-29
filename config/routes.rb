@@ -12,6 +12,8 @@ Rails.application.routes.draw do
           post 'refresh_access_token' => :refresh_access_token
 
           get 'check_user' => :check_user
+
+          put 'update' => :update
         end
       end
 
