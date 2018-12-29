@@ -21,6 +21,7 @@ Rails.application.routes.draw do
           post 'send_reservation' => :send_reservation
 
           delete 'delete_reservation' => :delete_reservation
+          delete 'delete_image' => :delete_image
         end
       end
 

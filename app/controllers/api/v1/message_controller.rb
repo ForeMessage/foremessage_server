@@ -88,4 +88,13 @@ class Api::V1::MessageController < ApplicationController
 
     success_response(message: "SUCCESS DELETE RESERVATION MESSAGE => #{delete_size}")
   end
+
+  def delete_image
+    raise Exceptions::ParameterMissingError.new(:link) unless params[:link].present?
+
+    file_name = params[:link].split('/').last
+    S3Service.new.delete_image(file_name)
+
+    success_response(message: "SUCCESS DELETE IMAGE => #{file_name}")
+  end
 end
