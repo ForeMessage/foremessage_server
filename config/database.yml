@@ -50,7 +50,7 @@ test:
 production:
   <<: *default
   database: foremessagedb
-  username: master
+  username: foremessage
   password: <%= Rails.application.credentials.DB_PASSWORD %>
-  host: 10.0.102.158
+  host: 10.0.102.63
   port: 3306
