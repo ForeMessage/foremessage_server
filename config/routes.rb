@@ -12,19 +12,24 @@ Rails.application.routes.draw do
           post 'refresh_access_token' => :refresh_access_token
 
           get 'check_user' => :check_user
+
+          put 'update' => :update
         end
       end
 
       scope :message do
         controller :message do
           post 'send' => :send_message
-          post 'send_secret' => :send_secret
+          post 'send_reservation' => :send_reservation
+
+          delete 'delete_reservation' => :delete_reservation
+          delete 'delete_image' => :delete_image
         end
       end
 
-      scope :friendships do
-        controller :friendships do
-          post 'load' => :load_friendships
+      scope :friends do
+        controller :friends do
+          post 'load_birthday' => :load_birthday
         end
       end
     end

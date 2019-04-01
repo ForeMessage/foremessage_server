@@ -1,0 +1,2 @@
+class ReservationMessage < ApplicationRecord
+end
