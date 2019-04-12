@@ -14,6 +14,8 @@ Rails.application.routes.draw do
           get 'check_user' => :check_user
 
           put 'update' => :update
+
+          delete 'destroy' => :destroy
         end
       end
 
