@@ -26,8 +26,8 @@ class PushNotificationService
   end
 
   def push_setting(notification)
-    notification.badge = 1
-    notification.sound = 'default'
+    # notification.badge = 1
+    # notification.sound = 'default'
     # notification.category = 'INVITE_CATEGORY'
     # notification.content_available = true
     # notification.mutable_content = true

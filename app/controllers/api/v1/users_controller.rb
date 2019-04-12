@@ -1,5 +1,5 @@
 class Api::V1::UsersController < ApplicationController
-  skip_before_action :check_access_token, only: [:verify_number, :check_user, :sign_in, :check_in, :sign_up, :refresh_access_token]
+  skip_before_action :check_access_token, only: [:verify_number, :check_user, :sign_in, :check_in, :sign_up, :destroy, :refresh_access_token]
   before_action :load_secret_service, only: [:sign_up, :sign_in, :check_in, :refresh_access_token]
 
   # 번호 인증
@@ -95,11 +95,18 @@ class Api::V1::UsersController < ApplicationController
     attributes = {}
     attributes.merge!({name: params[:name]}) if params[:name].present?
     attributes.merge!({birthday: params[:birthday]}) if params[:birthday].present?
-    puts params[:name]
-    puts attributes
+
     User.find(params[:user_id]).update_attributes(attributes)
 
     success_response(message: 'UPDATE USER DATA')
+  end
+
+  def destroy
+    raise Exceptions::ParameterMissingError.new(:phone_number) unless params[:phone_number].present?
+
+    User.find_by_phone_number(params[:phone_number]).destroy
+
+    success_response(message: 'DELETE USER DATA')
   end
 
   private
