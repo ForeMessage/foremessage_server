@@ -17,7 +17,7 @@ class PushNotificationService
 
   private
   def initialize
-    @apn = Houston::Client.development
+    @apn = Houston::Client.production
     @apn.certificate = File.read('/var/www/foremessage_server/shared/cert/foremessage.pem')
   end
 
