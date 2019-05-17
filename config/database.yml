@@ -52,5 +52,5 @@ production:
   database: foremessagedb
   username: foremessage
   password: <%= Rails.application.credentials.DB_PASSWORD %>
-  host: 10.0.102.63
+  host: 10.30.102.79
   port: 3306
