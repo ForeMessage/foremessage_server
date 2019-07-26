@@ -1,24 +1,18 @@
-# README
+# FOREMESSAGE SERVER
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+## Introduction
 
-Things you may want to cover:
+옛날 감성 문자 서비스
 
-* Ruby version
+## [Appstore](https://apps.apple.com/kr/app/foremessage/id1463129451)
 
-* System dependencies
+## Technologies
+- Rails : 5.2.3
+- ruby : 2.5.0
+- MySQL : 5.7.23
 
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+## Features
+- JWT를 이용한 사용자 인증
+- 실시간 문자 수신 및 발신
+- 단체 문자 발신
+- 예약 문자 발신
